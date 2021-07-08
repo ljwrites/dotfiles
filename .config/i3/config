@@ -13,7 +13,7 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:GoMono Nerd Font 14
+font pango:DejaVu Sans 12
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -99,54 +99,65 @@ bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 
 # focus the parent container
-bindsym $mod+a focus parent
+bindsym $mod+p focus parent
 
 # focus the child container
 #bindsym $mod+d focus child
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1: 爵  "
-set $ws2 "2:   "
-set $ws3 "3:   "
-set $ws4 "4:   "
+
+# browser
+set $ws1 "1:   "
+# email (mu4e)
+set $ws2 "2: 﫯  "
+# file manager (Dired)
+set $ws3 "3:   "
+# programming?
+set $ws4 "4:   "
+# media
 set $ws5 "5:   "
-set $ws6 "6:   "
-set $ws7 "7:   "
-set $ws8 "8:   "
-set $ws9 "9"
-set $ws10 "10"
+# reference
+set $ws6 "6: 龎  "
+# terminal (vterm)
+set $ws7 "7:   "
+# word processor
+set $ws8 "8:   "
+# organizer (Org Mode/Agenda)
+set $ws9 "9:  "
+# text editor (Emacs)
+set $ws10 "10:  "
 
 # switch to workspace
 bindsym $mod+b workspace number $ws1
-bindsym $mod+e workspace number $ws2
-bindsym $mod+i workspace number $ws3
-bindsym $mod+g workspace number $ws4
+bindsym $mod+e workspace number $ws2; mode "  "
+bindsym $mod+i workspace number $ws3; mode "  "
+bindsym $mod+c workspace number $ws4; mode "  "
 bindsym $mod+m workspace number $ws5
 bindsym $mod+r workspace number $ws6
-bindsym $mod+t workspace number $ws7
+bindsym $mod+t workspace number $ws7; mode "  "
 bindsym $mod+w workspace number $ws8
-bindsym $mod+9 workspace number $ws9
-bindsym $mod+0 workspace number $ws10
+bindsym $mod+o workspace number $ws9; mode "  "
+bindsym $mod+x workspace number $ws10; mode "  "
 
 # move focused container to workspace
-bindsym $mod+Shift+b move container to workspace number $ws1
-bindsym $mod+Shift+e move container to workspace number $ws2
-bindsym $mod+Shift+i move container to workspace number $ws3
-bindsym $mod+Shift+g move container to workspace number $ws4
-bindsym $mod+Shift+m move container to workspace number $ws5
-bindsym $mod+Shift+r move container to workspace number $ws6
-bindsym $mod+Shift+t move container to workspace number $ws7
-bindsym $mod+Shift+w move container to workspace number $ws8
-bindsym $mod+Shift+9 move container to workspace number $ws9
-bindsym $mod+Shift+0 move container to workspace number $ws10
+bindsym $mod+Shift+b move container to workspace number $ws1; workspace number $ws1
+bindsym $mod+Shift+e move container to workspace number $ws2; workspace number $ws2
+bindsym $mod+Shift+i move container to workspace number $ws3; workspace number $ws3
+bindsym $mod+Shift+c move container to workspace number $ws4; workspace number $ws4
+bindsym $mod+Shift+m move container to workspace number $ws5; workspace number $ws5
+bindsym $mod+Shift+r move container to workspace number $ws6; workspace number $ws6
+bindsym $mod+Shift+t move container to workspace number $ws7; workspace number $ws7
+bindsym $mod+Shift+w move container to workspace number $ws8; workspace number $ws8
+bindsym $mod+Shift+o move container to workspace number $ws9; workspace number $ws9
+bindsym $mod+Shift+x move container to workspace number $ws10; workspace number $ws10
 
 # reload the configuration file
-bindsym $mod+Shift+c reload
+bindsym $mod+Shift+a reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+z restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+x exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+y exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -175,6 +186,43 @@ mode "resize" {
 
 bindsym $mod+z mode "resize"
 
+# Emacs mode, to reuse the focus change keys in Emacs
+mode "  " {
+     binding_mode_indicator no
+     bindsym $mod+b workspace number $ws1; mode "default"
+     bindsym $mod+e workspace number $ws2
+     bindsym $mod+i workspace number $ws3
+     bindsym $mod+c workspace number $ws4
+     bindsym $mod+m workspace number $ws5; mode "default"
+     bindsym $mod+r workspace number $ws6; mode "default"
+     bindsym $mod+t workspace number $ws7
+     bindsym $mod+w workspace number $ws8; mode "default"
+     bindsym $mod+o workspace number $ws9
+     bindsym $mod+x workspace number $ws10
+
+     # move focused container to workspace
+     bindsym $mod+Shift+b move container to workspace number $ws1; workspace number $ws1; mode "default"
+     bindsym $mod+Shift+e move container to workspace number $ws2; workspace number $ws2; mode "default" 
+     bindsym $mod+Shift+i move container to workspace number $ws3; workspace number $ws3; mode "default"
+     bindsym $mod+Shift+c move container to workspace number $ws4; workspace number $ws4; mode "default"
+     bindsym $mod+Shift+m move container to workspace number $ws5; workspace number $ws5; mode "default"
+     bindsym $mod+Shift+r move container to workspace number $ws6; workspace number $ws6; mode "default"
+     bindsym $mod+Shift+t move container to workspace number $ws7; workspace number $ws7; mode "default"
+     bindsym $mod+Shift+w move container to workspace number $ws8; workspace number $ws8; mode "default"
+     bindsym $mod+Shift+o move container to workspace number $ws9; workspace number $ws9; mode "default"
+     bindsym $mod+Shift+x move container to workspace number $ws10; workspace number $ws10; mode "default"
+
+     # reload the configuration file
+     bindsym $mod+Shift+a reload
+     # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+     bindsym $mod+Shift+z restart
+     # exit i3 (logs you out of your X session)
+     bindsym $mod+Shift+y exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+     # leave emacs mode manually
+     bindsym $mod+z mode "default"
+}
+
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
@@ -184,18 +232,43 @@ bar {
 #	modifier Mod2
 	strip_workspace_numbers yes
 	colors {
-	       background		#09442E
-	       focused_workspace	#F8E53A	#09442E	#F8E53A	
-	       inactive_workspace	#09442E	#09442E	#939C86
+	       background		#3E0B49
+	       focused_workspace	#FDD834	#3E0B49	#FDD834
+	       inactive_workspace	#3E0B49 #3E0B49	#D0C2D2
+	       urgent_workspace		#3E0B49 #3E0B49	#D0C2D2
 	}
+	font pango:DejaVu Sans 14
 }
 
-default_border pixel 2
+default_border none
 
 exec chromium
-exec emacs
-# exec --no-startup-id picom -b
-# exec --no-startup-id feh -z --bg-fill ~/Pictures/Wallpaper/gris
+exec picom -b
+exec feh -z --bg-fill ~/Pictures/Wallpaper/gris
+
+# open up Emacs client frames
+# yes this is a hacky mess, buuut it works for now without the client buffers getting mixed up or files that are supposed to be in the background coming to the fore, so.
+# Mu4e frame in email workspace, doing this first because I can't seem to buffer-switch to mu4e and not giving opened files a chance to inhabit this buffer
+exec emacsclient -c -e '(mu4e)' -e '(delete-other-windows)' -F '((name . "emacs-email"))'
+# open some files and run some commands without frames so subsequent frames can switch to the buffers created here with switch-to-buffer, which seems quicker and less likely to be taken over by the files that are being opened as we go
+exec emacsclient -e '(find-file "~/Documents/website/blog/posts.org")' -e '(find-file "~/Documents/records/journal.org")' -e '(find-file "~/Documents/writing/soseono/draft.org")' -e '(find-file "~/.config/i3/config")' -e '(dired "~/Documents")' -e '(find-file "~/.emacs.d/init.el")'
+# Dired frame in file manager workspace
+exec emacsclient -c -e '(switch-to-buffer "Documents")' -e '(delete-other-windows)' -F '((name . "emacs-files"))'
+# Text editing frame for coding
+exec emacsclient -c -e '(switch-to-buffer "init.el")' -e '(delete-other-windows)' -F '((name . "emacs-coding"))'
+# Vterm frame in terminal workspace, just running the commands from here because the clients opened later don't seem to suffer from the same problem of loading delays and getting populated with the wrong buffers as a result
+# Told you it's hacky lol
+exec emacsclient -c -e '(vterm)' -e '(delete-other-windows)' -F '((name . "emacs-term"))'
+# Org agenda frame in organizer workspace
+exec emacsclient -c -e '(org-agenda-list)' -e '(delete-other-windows)' -F '((name . "emacs-org"))'
+# Text editing frame in text workspace
+exec emacsclient -c ~/Documents/translations/bluebeard/bluebeard-core.adoc -F '((name . "emacs-text"))'
+# Go to Agenda workspace so that's where I start out
+exec i3-msg workspace number $ws9
+# What if I opened a client without frames for other files? - Nope, doesn't work.
+#exec emacsclient ~/Documents/writing/soseono/draft.org
+#exec emacsclient ~/Documents/records/journal.org
+#exec emacsclient ~/Documents/website/blog/posts.org
 
 #assign workspaces to monitors
 #browser
@@ -218,10 +291,28 @@ workspace $ws8 output HDMI-1
 assign [class="Chromium"] $ws1
 assign [class="Firefox"] $ws1
 assign [class="Qutebrowser"] $ws1
+
 #emacs to emacs
-assign [class="Emacs"] $ws2
+#assign [class="Emacs"] $ws2
+
+# detailed Emacs assignment rules
+# Mu4e to email workspace
+assign [class="Emacs" title="emacs-email"] $ws2
+# Dired to file manager workspace
+assign [class="Emacs" title="emacs-files"] $ws3
+# init.el to coding workspace
+assign [class="Emacs" title="emacs-coding"] $ws4
+# Vterm to terminal workspace
+assign [class="Emacs" title="emacs-term"] $ws7
+# Org Agenda to org workspace
+assign [class="Emacs" title="emacs-org"] $ws9
+# Text file to text editing workspace
+assign [class="Emacs" title="emacs-text"] $ws10
+
 #thunar to files
 assign [class="Thunar"] $ws3
+# mupdf to references
+assign [class="MuPDF"] $ws6
 #termite to terminal
 assign [class="Termite"] $ws7
 #libreoffice to word processor
