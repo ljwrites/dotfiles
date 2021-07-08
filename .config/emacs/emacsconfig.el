@@ -1,3 +1,7 @@
+;; This is my actual init.el file, my actual init.el only consists of
+;; (load "~/.config/emacs/emacsconfig.el")
+;; Did this because my dotfiles repo did Not like the .emacs.d directory, oh well.
+
 ;;     (add-hook 'text-mode-hook
 ;;       (lambda () (set-input-method "korean-hangul3f")))
 
@@ -187,10 +191,6 @@
 ;; (define-key org-agenda-mode-map (kbd "C-s") 'org-save-all-org-buffers)
 
 (setq inhibit-splash-screen t)
-;; (find-file "~/.config/i3/config")
-;; (find-file "~/Documents/writing/soseono/draft.org")
-;; (find-file "~/Documents/records/journal.org")
-;; (find-file "~/Documents/website/blog/posts.org")
 
 (defun lj-emacsclient-faces ()
   "Setting up my default appearances when opening with emacsclient"
