@@ -1,43 +1,8 @@
-;; This is my actual init.el file, my actual init.el only consists of
+;; This is my actual init.el file, my original init.el only consists of
 ;; (load "~/.config/emacs/emacsconfig.el")
 ;; Did this because my dotfiles repo did Not like the .emacs.d directory, oh well.
 
-;;     (add-hook 'text-mode-hook
-;;       (lambda () (set-input-method "korean-hangul3f")))
-
-;;(defun my-korean3f-setup()
- ;;      "toggle to Korean 3beol-sik final"
- ;;      (if (equal current-language-environment "Korean")
- ;;          (setq default-input-method "korean-hangul3f")))
-;;     (add-hook 'set-language-environment-hook 'my-korean3f-setup)
-
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-;; (package-initialize)
-
 (setq default-korean-keyboard "3f")
-
-;;(with-eval-after-load "language/korea-util"
-;;(defun toggle-korean-input-method ()
-;;  "Turn on or off a Korean text input method for the current buffer."
-;;  (interactive)
-;;  (if current-input-method
-;;      (deactivate-input-method)
-;;    (activate-input-method
-;;     (concat "korean-hangul3f" default-korean-keyboard)))))
-
-;;(defun togggle-to-hangul3f()
-;;	"toggle to Korean 3beol-sik final"
-;;	(if (equal default-input-method "korean-hangul")
-;;		(setq default-input-method "korean-hangul3f")))
-;;(add-hook 'set-toggle-korean-input-method-hook 'toggle-to-hangul3f)
-
-;;(custom-set-variables
-;;'(default-input-method "korean-hangul3f"))
-
 
 (with-eval-after-load "quail"
   (push
@@ -86,10 +51,6 @@
           (quail-delete-overlays)))))
   )
 
-;;(setq default-input-method "korean-hangul3f")
-
-;;(set-input-method "korean-hangul3f")
-
 (require 'mu4e)
 
 (setq mu4e-change-filenames-when-moving t)
@@ -130,27 +91,14 @@
     (add-to-list 'tramp-default-proxies-alist
 	  '(".*" "\\`.+\\'" "/ssh:%h:"))))
 
-
-;;(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- ;;'(org-agenda-files
- ;;  (quote
-  ;;  ("~/Documents/research/philosophy/2020-readingroom-notes.org" "~/Documents/research/cbd-yt/notes-2020cbdyt.org" "~/Documents/records/journal.org"))))
-
-;;(set-face-attribute 'default nil :family "DejaVu Sans Mono")
-
+;; set some fonts
 (set-face-attribute 'default nil :family "Source Code Pro")
 
 (set-face-attribute 'default nil :height 150)
 
-
-;; (set-face-attribute 'fringe nil :background nil)
-
 (set-fontset-font t 'hangul (font-spec :name "NanumGothicCoding"))
 
+;; setting hanja fonts
 (set-fontset-font t '(#x3300 . #x9FFF) (font-spec :name "Noto Serif CJK KR"))
 
 (set-fontset-font t '(#xF900 . #xFAFF) (font-spec :name "Noto Serif CJK KR"))
@@ -159,20 +107,12 @@
 
 (set-fontset-font t '(#x2F800 . #x2F98F) (font-spec :name "Noto Serif CJK KR"))
 
-;;(set-fontset-font t '(#10047 . #10048) (font-spec :name "Noto Serif CJK KR"))
-;;(set-fontset-font t 'unicode (font-spec :name "Noto Serif CJK KR") nil 'prepend)
-
-(set-face-attribute 'variable-pitch nil :family "Atkinson Hyperlegible")
-
-(set-face-attribute 'variable-pitch nil :height 250)
-
 ;; global keybindings
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c m") 'mu4e)
 (global-set-key (kbd "C-c t") 'vterm)
-;; (global-set-key (kbd "C-c t") '(lambda () (interactive) (ansi-term "/bin/bash")))
 (global-set-key (kbd "C-c w") 'count-words)
 (global-set-key (kbd "C-s") 'save-buffer)
 
@@ -186,9 +126,6 @@
 (global-set-key (kbd "s-l") 'windmove-right)
 (global-set-key (kbd "s-k") 'windmove-up)
 (global-set-key (kbd "s-j") 'windmove-down)
-
-;; set to match save key in org agenda
-;; (define-key org-agenda-mode-map (kbd "C-s") 'org-save-all-org-buffers)
 
 (setq inhibit-splash-screen t)
 
@@ -204,8 +141,6 @@
   (set-fontset-font t '(#x20000 . #x2A6DF) (font-spec :name "Noto Serif CJK KR"))
   (set-fontset-font t '(#x2F800 . #x2F98F) (font-spec :name "Noto Serif CJK KR"))
   (setq doom-modeline-icon t)
-  ;; DEBUG - trying to see if setting org-mode-hook here will get them respected
-  ;; (add-hook 'org-mode-hook #'lj-org-mode-hook)
 )
 
 (add-hook 'after-make-frame-functions
@@ -224,10 +159,6 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
 (require 'color-theme)
-;;(eval-after-load "color-theme"
-;;  '(progn
-;;     (color-theme-initialize)
-;;     (color-theme-deep-blue)))
 
 (load-theme 'zenburn t)
 
@@ -242,9 +173,7 @@
 (setq evil-want-keybinding nil)
 
 (defun lj-org-mode-hook ()
-  ;;(evil-org-mode +1)
   (olivetti-mode +1)
-  ;;(variable-pitch-mode +1)
   (org-bullets-mode +1)
 )
 
@@ -263,12 +192,11 @@
 (add-to-list 'load-path "~/.emacs.d/lisp/evil-org-mode")
 (require 'evil-org)
 
-
 (evil-org-set-key-theme '(navigation insert textobjects additional calendar))
 (require 'evil-org-agenda)
 (evil-org-agenda-set-keys)
-;; (add-hook 'org-mode-hook (lambda () (variable-pitch-mode t))
 
+(add-hook 'org-mode-hook #'lj-org-mode-hook)
 (require 'evil)
 (evil-mode 1)
 (setq evil-undo-system 'undo-fu)
@@ -280,16 +208,7 @@
 (when (require 'evil-collection nil t)
   (evil-collection-init))
 
-;; (set-frame-parameter (selected-frame) 'alpha '(85 . 50))
-;; (add-to-list 'default-frame-alist '(alpha . (85 . 50)))
-
 (setq default-directory "~/")
-;;(start-process "picom" nil "picom")
-
-;;(setq ido-enable-flex-matching t)
-;;(setq ido-everywhere t)
-;;(ido-mode 1)
-
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -342,8 +261,6 @@
  '(vc-annotate-very-old-color "#DC8CC3" t))
   (define-key icomplete-minibuffer-map (kbd "<return>") 'icomplete-force-complete-and-exit)
 
-;; (start-process "wallpapers" nil "feh" "--bg-fill" "-z" "/home/lj/Pictures/Wallpaper/gris/" "--bg-fill" "-z" "/home/lj/Pictures/Wallpaper/gris/vertical")
-
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
 (setq recentf-max-saved-items 25)
@@ -367,18 +284,6 @@
   (if (find-file (ido-completing-read "Find recent file: " recentf-list))
       (message "Opening file...")
     (message "Aborting")))
-
-
-
-
-;;(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-;; '(fringe ((t (:background "#102e4e")))))
-
-;;(set-face-attribute 'fringe t :background "#000000")
 
 (defun er-sudo-edit (&optional arg)
   "Edit currently visited file as root.
@@ -435,7 +340,7 @@ If not, open it in Emacs."
 	)
     (if (null default)
 	;; if no default found for file, open in Emacs
-	(dired-find-file-other-window)
+	(dired-find-file)
         ;; if default is found for file, run command asynchronously
       (dired-run-shell-command (dired-shell-stuff-it (concat default " &") file-list nil))
       )
@@ -444,13 +349,6 @@ If not, open it in Emacs."
 
 ;; This function is bound to the Return key in dired-mode to replace the default behavior on Return
 (define-key dired-mode-map (kbd "<return>") #'dired-find-file-or-do-async-shell-command)
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 
 (with-eval-after-load 'ox
   (require 'ox-hugo))
@@ -470,7 +368,3 @@ If not, open it in Emacs."
 (doom-modeline-mode 1)
 (setq doom-modeline-height 15)
 
-;; DEBUG Just trying to put this as far behind as possible lol
-(add-hook 'org-mode-hook #'lj-org-mode-hook)
-;;(when (and (fboundp 'daemonp) (daemonp))
-  ;;(add-hook 'org-mode-hook #'lj-org-mode-hook))
