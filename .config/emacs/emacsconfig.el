@@ -127,6 +127,17 @@
 (global-set-key (kbd "s-k") 'windmove-up)
 (global-set-key (kbd "s-j") 'windmove-down)
 
+;; delete current window
+(global-set-key (kbd "s-q") 'delete-window)
+;; delete all other windows
+(global-set-key (kbd "s-a") 'delete-other-windows)
+;; switch buffer
+(global-set-key (kbd "s-s") 'switch-to-buffer)
+;; find file
+(global-set-key (kbd "s-f") 'find-file)
+;; open buffer in right window? - tbc
+;; open recent file?
+
 (setq inhibit-splash-screen t)
 
 (defun lj-emacsclient-faces ()
@@ -188,6 +199,9 @@
 (set-face-attribute 'org-level-6 nil :family "Noto Sans CJK KR")
 (set-face-attribute 'org-level-7 nil :family "Noto Sans CJK KR")
 (set-face-attribute 'org-level-8 nil :family "Noto Sans CJK KR")
+
+;; advise org-agenda-switch-to to open window to right
+(advice-add 'org-agenda-switch-to :before #'windmove-display-right)
 
 (add-to-list 'load-path "~/.emacs.d/lisp/evil-org-mode")
 (require 'evil-org)
@@ -337,10 +351,20 @@ If not, open it in Emacs."
 	(default (dired-guess-default (cons (dired-get-filename) '())))
 	;; put the file name into a list so dired-shell-stuff-it will accept it
 	(file-list (cons (dired-get-filename) '()))
+	;; get a filename string(?) for the purpose of testing whether a directory
+	(filename (dired-get-filename nil t))
 	)
     (if (null default)
-	;; if no default found for file, open in Emacs
-	(dired-find-file)
+	;; if no default found for file, open in Emacs 
+	(if (file-directory-p filename)
+	    ;; if directory, open in same window
+	    (dired-find-file)
+	  ;; if not directory, open in right window
+	    (progn
+	      (windmove-display-right)
+	      (dired-find-file)
+	      )
+	    )	
         ;; if default is found for file, run command asynchronously
       (dired-run-shell-command (dired-shell-stuff-it (concat default " &") file-list nil))
       )
