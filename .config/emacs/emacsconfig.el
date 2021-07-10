@@ -392,3 +392,28 @@ If not, open it in Emacs."
 (doom-modeline-mode 1)
 (setq doom-modeline-height 15)
 
+(defun windmove-do-window-select (dir &optional arg window)
+  "Modified for better Emacs-i3wm integration.
+Move to the window at direction DIR as seen from WINDOW.
+DIR, ARG, and WINDOW are handled as by `windmove-find-other-window'.
+If no window is at direction DIR, an error is signaled.
+If `windmove-create-window' is non-nil, try to create a new window
+in direction DIR instead."
+  (let ((other-window (windmove-find-other-window dir arg window)))
+    (when (and windmove-create-window
+               (or (null other-window)
+                   (and (window-minibuffer-p other-window)
+                        (not (minibuffer-window-active-p other-window)))))
+      (setq other-window (split-window window nil dir)))
+    (cond ((null other-window)
+	   (progn
+           ;; (user-error "No window %s from selected window" dir)
+	  (interactive)
+	  (shell-command (format "i3-msg focus %s" dir))
+	  (shell-command (format "i3-msg mode 'default'"))
+	  ))
+          ((and (window-minibuffer-p other-window)
+                (not (minibuffer-window-active-p other-window)))
+           (user-error "Minibuffer is inactive"))
+          (t
+           (select-window other-window)))))
