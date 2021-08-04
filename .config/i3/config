@@ -108,13 +108,13 @@ bindsym $mod+p focus parent
 # We use variables to avoid repeating the names in multiple places.
 
 # browser
-set $ws1 "1:   "
+set $ws1 "1:  "
 # email (mu4e)
 set $ws2 "2: 﫯  "
 # file manager (Dired)
-set $ws3 "3:   "
+set $ws3 "3:  "
 # programming?
-set $ws4 "4:   "
+set $ws4 "4: 襁  "
 # media
 set $ws5 "5:   "
 # reference
@@ -212,6 +212,8 @@ mode "  " {
      bindsym $mod+Shift+o move container to workspace number $ws9; workspace number $ws9; mode "default"
      bindsym $mod+Shift+x move container to workspace number $ws10; workspace number $ws10; mode "default"
 
+     # start dmenu (a program launcher)
+     bindsym $mod+d exec dmenu_run
      # reload the configuration file
      bindsym $mod+Shift+a reload
      # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
@@ -219,8 +221,20 @@ mode "  " {
      # exit i3 (logs you out of your X session)
      bindsym $mod+Shift+y exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
+     # kill focused window
+     bindsym $mod+Shift+q kill
+
      # leave emacs mode manually
      bindsym $mod+z mode "default"
+
+#change to single-monitor mode
+bindsym $mod+1 exec /home/lj/.screenlayout/1mon-1.sh
+#change to dual-monitor mode
+bindsym $mod+2 exec /home/lj/.screenlayout/2mon_dvi1.sh
+#change to alternate single-monitor mode (if monitor is DVI-1-2)
+bindsym $mod+3 exec /home/lj/.screenlayout/1mon-2.sh
+#change to dual-monitor mode (if monitor is DVI-1-2)
+bindsym $mod+4 exec /home/lj/.screenlayout/2mon_dvi2.sh
 }
 
 # Start i3bar to display a workspace bar (plus the system information i3status
@@ -248,16 +262,19 @@ exec feh -z --bg-fill ~/Pictures/Wallpaper/gris
 
 # open up Emacs client frames
 # yes this is a hacky mess, buuut it works for now without the client buffers getting mixed up or files that are supposed to be in the background coming to the fore, so.
-# Mu4e frame in email workspace, doing this first because I can't seem to buffer-switch to mu4e and not giving opened files a chance to inhabit this buffer
-exec emacsclient -c -e '(mu4e)' -e '(delete-other-windows)' -F '((name . "emacs-email"))'
 # open some files and run some commands without frames so subsequent frames can switch to the buffers created here with switch-to-buffer, which seems quicker and less likely to be taken over by the files that are being opened as we go
-exec emacsclient -e '(find-file "~/Documents/website/blog/posts.org")' -e '(find-file "~/Documents/records/journal.org")' -e '(find-file "~/Documents/writing/soseono/draft.org")' -e '(find-file "~/.config/i3/config")' -e '(dired "~/Documents")' -e '(find-file "~/.emacs.d/init.el")'
+# exec emacsclient -e '(find-file "~/Documents/website/blog/posts.org")' -e '(find-file "~/Documents/records/journal.org")' -e '(find-file "~/Documents/writing/soseono/draft.org")' -e '(find-file "~/.config/i3/config")' -e '(dired "~/Documents")' -e '(find-file "~/.config/emacs/emacsconfig.el")'
+# trying to make server return immediately after visiting files etc.
+#exec emacsclient --no-wait -e '(find-file "~/Documents/website/blog/posts.org")' -e '(find-file "~/Documents/records/journal.org")' -e '(find-file "~/Documents/writing/soseono/draft.org")' -e '(find-file "~/.config/i3/config")' -e '(find-file "~/.config/emacs/emacsconfig.el")'
+# Mu4e frame in email workspace
+exec emacsclient -c -e '(mu4e)' -F '((name . "emacs-email"))'
+# DEBUG setup for monitors
+#-e '(find-file "~/.xinitrc")' -e '(find-file "~/.bashrc")' -e '(find-file "/home/lj/.screenlayout/2mon_10.sh")' -e '(find-file "/etc/X11/xorg.conf.d/20-displaylink.conf")'
 # Dired frame in file manager workspace
-exec emacsclient -c -e '(switch-to-buffer "Documents")' -e '(delete-other-windows)' -F '((name . "emacs-files"))'
+exec emacsclient -c -e '(dired "~/Documents")' -e '(delete-other-windows)' -F '((name . "emacs-files"))'
 # Text editing frame for coding
-exec emacsclient -c -e '(switch-to-buffer "init.el")' -e '(delete-other-windows)' -F '((name . "emacs-coding"))'
-# Vterm frame in terminal workspace, just running the commands from here because the clients opened later don't seem to suffer from the same problem of loading delays and getting populated with the wrong buffers as a result
-# Told you it's hacky lol
+exec emacsclient -c -e '(find-file "~/.config/emacs/emacsconfig.el")' -e '(delete-other-windows)' -F '((name . "emacs-coding"))'
+#Vterm frame in terminal workspace
 exec emacsclient -c -e '(vterm)' -e '(delete-other-windows)' -F '((name . "emacs-term"))'
 # Org agenda frame in organizer workspace
 exec emacsclient -c -e '(org-agenda-list)' -e '(delete-other-windows)' -F '((name . "emacs-org"))'
@@ -265,10 +282,15 @@ exec emacsclient -c -e '(org-agenda-list)' -e '(delete-other-windows)' -F '((nam
 exec emacsclient -c ~/Documents/translations/bluebeard/bluebeard-core.adoc -F '((name . "emacs-text"))'
 # Go to Agenda workspace so that's where I start out
 exec i3-msg workspace number $ws9
-# What if I opened a client without frames for other files? - Nope, doesn't work.
-#exec emacsclient ~/Documents/writing/soseono/draft.org
-#exec emacsclient ~/Documents/records/journal.org
-#exec emacsclient ~/Documents/website/blog/posts.org
+# read desktop? Is this how it works??
+# exec emacsclient -c -e '(desktop-read "~/.emacs.d/desktop")'
+# let's try running without evaluating desktop-read, since that's in a hook function
+#exec emacsclient -c 
+# or maybe try to open files individually??
+# exec emacsclient --no-wait ~/Documents/website/blog/posts.org
+# exec emacsclient --no-wait ~/Documents/records/journal.org
+# exec emacsclient --no-wait ~/Documents/writing/soseono/draft.org
+# exec emacsclient --no-wait ~/.config/i3/config
 
 #assign workspaces to monitors
 #browser
@@ -319,8 +341,17 @@ assign [class="Termite"] $ws7
 assign [class="libreoffice"] $ws8
 
 #move workspace to first monitor
-bindsym $mod+1 move workspace to output HDMI-1
+bindsym $mod+Shift+1 move workspace to output HDMI-1
 #move workspace to second monitor
-bindsym $mod+2 move workspace to output DVI-I-1-2
+bindsym $mod+Shift+2 move workspace to output DVI-I-1-1
 #move workspace to alternate second monitor
-bindsym $mod+3 move workspace to output DVI-I-1-12
+bindsym $mod+Shift+3 move workspace to output DVI-I-1-2
+
+#change to single-monitor mode
+bindsym $mod+1 exec /home/lj/.screenlayout/1mon-1.sh
+#change to dual-monitor mode
+bindsym $mod+2 exec /home/lj/.screenlayout/2mon_dvi1.sh
+#change to alternate single-monitor mode (if monitor is DVI-1-2)
+bindsym $mod+3 exec /home/lj/.screenlayout/1mon-2.sh
+#change to dual-monitor mode (if monitor is DVI-1-2)
+bindsym $mod+4 exec /home/lj/.screenlayout/2mon_dvi2.sh

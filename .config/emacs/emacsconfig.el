@@ -132,13 +132,31 @@
 ;; delete all other windows
 (global-set-key (kbd "s-a") 'delete-other-windows)
 ;; switch buffer
-(global-set-key (kbd "s-s") 'switch-to-buffer)
+(global-set-key (kbd "s-v") 'switch-to-buffer)
 ;; find file
 (global-set-key (kbd "s-f") 'find-file)
 ;; open buffer in right window? - tbc
 ;; open recent file?
 
+(require 'desktop)
+(setq desktop-save t)
+(desktop-save-mode 1)
+(setq desktop-path (list "~/.emacs.d/desktop"))
+(setq desktop-restore-frames t)
+(setq desktop-load-locked-desktop t)
+
+;;(setq desktop-buffer-mode-handlers '(     ))
+
+;; add frame name to frameset-filter-alist 
+(push '(client . nil) frameset-filter-alist)
+
+;; add frame name to frameset-filter-alist 
+(push '(name . nil) frameset-filter-alist)
+
+;;get rid of starting splash screen
 (setq inhibit-splash-screen t)
+;;don't get rid of buffers
+(setq server-kill-new-buffers nil)
 
 (defun lj-emacsclient-faces ()
   "Setting up my default appearances when opening with emacsclient"
@@ -152,6 +170,7 @@
   (set-fontset-font t '(#x20000 . #x2A6DF) (font-spec :name "Noto Serif CJK KR"))
   (set-fontset-font t '(#x2F800 . #x2F98F) (font-spec :name "Noto Serif CJK KR"))
   (setq doom-modeline-icon t)
+  ;;(desktop-read "~/.emacs.d/desktop")
 )
 
 (add-hook 'after-make-frame-functions
@@ -190,7 +209,10 @@
 
 (require 'org-bullets)
 (setq org-bullets-face-name (quote bulletface))
-(setq org-bullets-bullet-list '("✿"))
+;; (setq org-bullets-bullet-list '("✿"))
+;;  nf-dev-yii    望  nf-mdi-creation   mandrake?  linux  beans     modx  nf-fae-plant
+;;   ravelry  ravelry  nf-fa-gg
+(setq org-bullets-bullet-list '("" "" "" "" "﯑"))
 (set-face-attribute 'org-level-1 nil :family "Noto Sans CJK KR")
 (set-face-attribute 'org-level-2 nil :family "Noto Sans CJK KR")
 (set-face-attribute 'org-level-3 nil :family "Noto Sans CJK KR")
@@ -202,6 +224,54 @@
 
 ;; advise org-agenda-switch-to to open window to right
 (advice-add 'org-agenda-switch-to :before #'windmove-display-right)
+
+;; or redefine evil-insert, since advice gives an error?
+
+(defun evil-insert (count &optional vcount skip-empty-lines)
+  "Switch to Insert state just before point.
+The insertion will be repeated COUNT times and repeated once for
+the next VCOUNT - 1 lines starting at the same column.
+If SKIP-EMPTY-LINES is non-nil, the insertion will not be performed
+on lines on which the insertion point would be after the end of the
+lines.  This is the default behaviour for Visual-state insertion."
+  (interactive
+   (list (prefix-numeric-value current-prefix-arg)
+         (and (evil-visual-state-p)
+              (memq (evil-visual-type) '(line block))
+              (save-excursion
+                (let ((m (mark)))
+                  ;; go to upper-left corner temporarily so
+                  ;; `count-lines' yields accurate results
+                  (evil-visual-rotate 'upper-left)
+                  (prog1 (count-lines evil-visual-beginning evil-visual-end)
+                    (set-mark m)))))
+         (evil-visual-state-p)))
+  (if (and (called-interactively-p 'any)
+           (evil-visual-state-p))
+      (cond
+       ((eq (evil-visual-type) 'line)
+        (evil-visual-rotate 'upper-left)
+        (evil-insert-line count vcount))
+       ((eq (evil-visual-type) 'block)
+        (let ((column (min (evil-column evil-visual-beginning)
+                           (evil-column evil-visual-end))))
+          (evil-visual-rotate 'upper-left)
+          (move-to-column column t)
+          (evil-insert count vcount skip-empty-lines)))
+       (t
+        (evil-visual-rotate 'upper-left)
+        (evil-insert count vcount skip-empty-lines)))
+    (setq evil-insert-count count
+          evil-insert-lines nil
+          evil-insert-vcount (and vcount
+                                  (> vcount 1)
+                                  (list (line-number-at-pos)
+                                        (current-column)
+                                        vcount))
+          evil-insert-skip-empty-lines skip-empty-lines)
+    (evil-insert-state 1)
+    (toggle-korean-input-method)
+    ))
 
 (add-to-list 'load-path "~/.emacs.d/lisp/evil-org-mode")
 (require 'evil-org)
@@ -307,9 +377,9 @@ Will also prompt for a file to visit if current
 buffer is not visiting a file."
   (interactive "P")
   (if (or arg (not buffer-file-name))
-      (find-file (concat "/sudo::root@localhost:"
+      (find-file (concat "/sudo::root@arch:"
                          (ido-read-file-name "Find file(as root): ")))
-    (find-alternate-file (concat "/sudo::root@localhost:" buffer-file-name))))
+    (find-alternate-file (concat "/sudo::root@arch:" buffer-file-name))))
 
 (global-set-key (kbd "C-c o") #'er-sudo-edit)
 
@@ -409,7 +479,9 @@ in direction DIR instead."
 	   (progn
            ;; (user-error "No window %s from selected window" dir)
 	  (interactive)
+	  ;; send i3wm command to go in the same direction to external window
 	  (shell-command (format "i3-msg focus %s" dir))
+	  ;; turn off emacs mode so the focus shift keybinds now go to the default i3wm commands
 	  (shell-command (format "i3-msg mode 'default'"))
 	  ))
           ((and (window-minibuffer-p other-window)
@@ -417,3 +489,5 @@ in direction DIR instead."
            (user-error "Minibuffer is inactive"))
           (t
            (select-window other-window)))))
+
+

@@ -49,15 +49,16 @@ fi
 
 xbindkeys
 
+# stopped ssh-agent.service, setting environment here
+#DISPLAY=:0
 # set ssh-askpass (symlinked to x11-ssh-askpass) as the SSH_ASKPASS variable
-export SSH_ASKPASS=ssh-askpass
+#export SSH_ASKPASS=ssh-askpass
+SSH_ASKPASS=ssh-askpass
+ start ssh-agent
+eval $(ssh-agent)
 
-#twm &
-#xclock -geometry 50x50-1+1 &
-#xterm -geometry 80x50+494+51 &
-#xterm -geometry 80x20+494-0 &
-#xterm -geometry 80x66+0+0 -name login
-~/.screenlayout/2mon_10.sh & 
-emacs --daemon
+# uncomment below for dual monitor setup
+#~/.screenlayout/2mon_dvi1.sh & 
+# uncomment below for single monitor setup
+~/.screenlayout/1mon-1.sh & 
 exec i3
-
