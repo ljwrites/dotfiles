@@ -210,8 +210,9 @@
 (require 'org-bullets)
 (setq org-bullets-face-name (quote bulletface))
 ;; (setq org-bullets-bullet-list '("✿"))
-;;  nf-dev-yii    望  nf-mdi-creation   mandrake?  linux  beans     modx  nf-fae-plant
-;;   ravelry  ravelry  nf-fa-gg
+;;  nf-dev-yii    望  nf-mdi-creation   mandrake?  linux  beans     modx  nf-fae-plant
+;;   ravelry  ravelry  nf-fa-gg 嬨 nf-mdi-vpn 
+;;  
 (setq org-bullets-bullet-list '("" "" "" "" "﯑"))
 (set-face-attribute 'org-level-1 nil :family "Noto Sans CJK KR")
 (set-face-attribute 'org-level-2 nil :family "Noto Sans CJK KR")
@@ -221,6 +222,8 @@
 (set-face-attribute 'org-level-6 nil :family "Noto Sans CJK KR")
 (set-face-attribute 'org-level-7 nil :family "Noto Sans CJK KR")
 (set-face-attribute 'org-level-8 nil :family "Noto Sans CJK KR")
+
+(setq org-ellipsis " ")
 
 ;; advise org-agenda-switch-to to open window to right
 (advice-add 'org-agenda-switch-to :before #'windmove-display-right)
@@ -377,9 +380,9 @@ Will also prompt for a file to visit if current
 buffer is not visiting a file."
   (interactive "P")
   (if (or arg (not buffer-file-name))
-      (find-file (concat "/sudo::root@arch:"
+      (find-file (concat "/sudo:root@arch:"
                          (ido-read-file-name "Find file(as root): ")))
-    (find-alternate-file (concat "/sudo::root@arch:" buffer-file-name))))
+    (find-alternate-file (concat "/sudo:root@arch:" buffer-file-name))))
 
 (global-set-key (kbd "C-c o") #'er-sudo-edit)
 
