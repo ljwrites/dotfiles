@@ -19,7 +19,7 @@ alias s12='/home/lj/.screenlayout/1mon-2.sh'
 alias s2='/home/lj/.screenlayout/2mon_dvi1.sh'
 alias s21='/home/lj/.screenlayout/2mon_dvi1.sh'
 alias s22='/home/lj/.screenlayout/2mon_dvi2.sh'
-alias rando='feh -z --bg-fill /home/lj/Pictures/Wallpaper/gris -z --bg-fill /home/lj/Pictures/Wallpaper/gris/vertical'
+alias rando='feh --bg-fill -z ~/Pictures/Wallpaper/watercolors/905828.jpg -z ~/Pictures/Wallpaper/watercolors-vertical'
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/.git --work-tree=$HOME'
 
 findstring() {
