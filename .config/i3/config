@@ -258,22 +258,16 @@ default_border none
 
 exec chromium
 exec picom -b
-exec feh -z --bg-fill ~/Pictures/Wallpaper/gris
+exec feh --bg-fill -z ~/Pictures/Wallpaper/watercolors/905828.jpg -z ~/Pictures/Wallpaper/watercolors-vertical
+
 
 # open up Emacs client frames
-# yes this is a hacky mess, buuut it works for now without the client buffers getting mixed up or files that are supposed to be in the background coming to the fore, so.
-# open some files and run some commands without frames so subsequent frames can switch to the buffers created here with switch-to-buffer, which seems quicker and less likely to be taken over by the files that are being opened as we go
-# exec emacsclient -e '(find-file "~/Documents/website/blog/posts.org")' -e '(find-file "~/Documents/records/journal.org")' -e '(find-file "~/Documents/writing/soseono/draft.org")' -e '(find-file "~/.config/i3/config")' -e '(dired "~/Documents")' -e '(find-file "~/.config/emacs/emacsconfig.el")'
-# trying to make server return immediately after visiting files etc.
-#exec emacsclient --no-wait -e '(find-file "~/Documents/website/blog/posts.org")' -e '(find-file "~/Documents/records/journal.org")' -e '(find-file "~/Documents/writing/soseono/draft.org")' -e '(find-file "~/.config/i3/config")' -e '(find-file "~/.config/emacs/emacsconfig.el")'
 # Mu4e frame in email workspace
 exec emacsclient -c -e '(mu4e)' -F '((name . "emacs-email"))'
-# DEBUG setup for monitors
-#-e '(find-file "~/.xinitrc")' -e '(find-file "~/.bashrc")' -e '(find-file "/home/lj/.screenlayout/2mon_10.sh")' -e '(find-file "/etc/X11/xorg.conf.d/20-displaylink.conf")'
 # Dired frame in file manager workspace
 exec emacsclient -c -e '(dired "~/Documents")' -e '(delete-other-windows)' -F '((name . "emacs-files"))'
 # Text editing frame for coding
-exec emacsclient -c -e '(find-file "~/.config/emacs/emacsconfig.el")' -e '(delete-other-windows)' -F '((name . "emacs-coding"))'
+# exec emacsclient -c -e '(find-file "~/.config/emacs/emacsconfig.el")' -e '(delete-other-windows)' -F '((name . "emacs-coding"))'
 #Vterm frame in terminal workspace
 exec emacsclient -c -e '(vterm)' -e '(delete-other-windows)' -F '((name . "emacs-term"))'
 # Org agenda frame in organizer workspace
@@ -282,15 +276,6 @@ exec emacsclient -c -e '(org-agenda-list)' -e '(delete-other-windows)' -F '((nam
 exec emacsclient -c ~/Documents/translations/bluebeard/bluebeard-core.adoc -F '((name . "emacs-text"))'
 # Go to Agenda workspace so that's where I start out
 exec i3-msg workspace number $ws9
-# read desktop? Is this how it works??
-# exec emacsclient -c -e '(desktop-read "~/.emacs.d/desktop")'
-# let's try running without evaluating desktop-read, since that's in a hook function
-#exec emacsclient -c 
-# or maybe try to open files individually??
-# exec emacsclient --no-wait ~/Documents/website/blog/posts.org
-# exec emacsclient --no-wait ~/Documents/records/journal.org
-# exec emacsclient --no-wait ~/Documents/writing/soseono/draft.org
-# exec emacsclient --no-wait ~/.config/i3/config
 
 #assign workspaces to monitors
 #browser
@@ -302,7 +287,7 @@ workspace $ws4 output HDMI-1
 #media
 workspace $ws5 output HDMI-1
 #reference
-workspace $ws6 output DVI-I-1-2 DVI-I-1-1 DVI-I-1-10 DVI-I-1-11 DVI-I-1-12 
+workspace $ws6 output DVI-I-1-2 DVI-I-1-1 
 #terminal
 workspace $ws7 output HDMI-1
 #word processor
