@@ -92,10 +92,9 @@
 	  '(".*" "\\`.+\\'" "/ssh:%h:"))))
 
 ;; set some fonts
-(set-face-attribute 'default nil :family "Source Code Pro")
-
-(set-face-attribute 'default nil :height 150)
-
+(set-face-attribute 'default nil :family "Source Code Pro" :height 150)
+(set-face-attribute 'fixed-pitch nil :family "Source Code Pro" :height 150)
+(set-face-attribute 'variable-pitch nil :family "Bookerly" :height 150)
 (set-fontset-font t 'hangul (font-spec :name "NanumGothicCoding"))
 
 ;; setting hanja fonts
@@ -106,6 +105,8 @@
 (set-fontset-font t '(#x20000 . #x2A6DF) (font-spec :name "Noto Serif CJK KR"))
 
 (set-fontset-font t '(#x2F800 . #x2F98F) (font-spec :name "Noto Serif CJK KR"))
+
+(require 'mixed-pitch)
 
 ;; global keybindings
 (global-set-key (kbd "C-c l") 'org-store-link)
@@ -134,7 +135,7 @@
 ;; switch buffer
 (global-set-key (kbd "s-v") 'switch-to-buffer)
 ;; find file
-(global-set-key (kbd "s-f") 'find-file)
+;;(global-set-key (kbd "s-f") 'find-file)
 ;; open buffer in right window? - tbc
 ;; open recent file?
 
@@ -162,8 +163,9 @@
   "Setting up my default appearances when opening with emacsclient"
   (interactive)
   (load-theme 'zenburn t)
-  (set-face-attribute 'default nil :family "Source Code Pro")
-  (set-face-attribute 'default nil :height 150)
+  (set-face-attribute 'default nil :family "Source Code Pro" :height 150)
+  (set-face-attribute 'fixed-pitch nil :family "Source Code Pro" :height 150)
+  (set-face-attribute 'variable-pitch nil :family "Bookerly" :height 150)
   (set-fontset-font t 'hangul (font-spec :name "NanumGothicCoding"))
   (set-fontset-font t '(#x3300 . #x9FFF) (font-spec :name "Noto Serif CJK KR"))
   (set-fontset-font t '(#xF900 . #xFAFF) (font-spec :name "Noto Serif CJK KR"))
@@ -205,6 +207,7 @@
 (defun lj-org-mode-hook ()
   (olivetti-mode +1)
   (org-bullets-mode +1)
+  (mixed-pitch-mode +1)
 )
 
 (require 'org-bullets)
@@ -214,67 +217,20 @@
 ;;   ravelry  ravelry  nf-fa-gg 嬨 nf-mdi-vpn 
 ;;  
 (setq org-bullets-bullet-list '("" "" "" "" "﯑"))
-(set-face-attribute 'org-level-1 nil :family "Noto Sans CJK KR")
-(set-face-attribute 'org-level-2 nil :family "Noto Sans CJK KR")
-(set-face-attribute 'org-level-3 nil :family "Noto Sans CJK KR")
-(set-face-attribute 'org-level-4 nil :family "Noto Sans CJK KR")
-(set-face-attribute 'org-level-5 nil :family "Noto Sans CJK KR")
-(set-face-attribute 'org-level-6 nil :family "Noto Sans CJK KR")
-(set-face-attribute 'org-level-7 nil :family "Noto Sans CJK KR")
-(set-face-attribute 'org-level-8 nil :family "Noto Sans CJK KR")
+(set-face-attribute 'org-level-1 nil :family "GoMono Nerd Font")
+(set-face-attribute 'org-level-2 nil :family "GoMono Nerd Font")
+(set-face-attribute 'org-level-3 nil :family "GoMono Nerd Font")
+(set-face-attribute 'org-level-4 nil :family "GoMono Nerd Font")
+(set-face-attribute 'org-level-5 nil :family "GoMono Nerd Font")
+(set-face-attribute 'org-level-6 nil :family "GoMono Nerd Font")
+(set-face-attribute 'org-level-7 nil :family "GoMono Nerd Font")
+(set-face-attribute 'org-level-8 nil :family "GoMono Nerd Font")
 
 (setq org-ellipsis " ")
 
+
 ;; advise org-agenda-switch-to to open window to right
 (advice-add 'org-agenda-switch-to :before #'windmove-display-right)
-
-;; or redefine evil-insert, since advice gives an error?
-
-(defun evil-insert (count &optional vcount skip-empty-lines)
-  "Switch to Insert state just before point.
-The insertion will be repeated COUNT times and repeated once for
-the next VCOUNT - 1 lines starting at the same column.
-If SKIP-EMPTY-LINES is non-nil, the insertion will not be performed
-on lines on which the insertion point would be after the end of the
-lines.  This is the default behaviour for Visual-state insertion."
-  (interactive
-   (list (prefix-numeric-value current-prefix-arg)
-         (and (evil-visual-state-p)
-              (memq (evil-visual-type) '(line block))
-              (save-excursion
-                (let ((m (mark)))
-                  ;; go to upper-left corner temporarily so
-                  ;; `count-lines' yields accurate results
-                  (evil-visual-rotate 'upper-left)
-                  (prog1 (count-lines evil-visual-beginning evil-visual-end)
-                    (set-mark m)))))
-         (evil-visual-state-p)))
-  (if (and (called-interactively-p 'any)
-           (evil-visual-state-p))
-      (cond
-       ((eq (evil-visual-type) 'line)
-        (evil-visual-rotate 'upper-left)
-        (evil-insert-line count vcount))
-       ((eq (evil-visual-type) 'block)
-        (let ((column (min (evil-column evil-visual-beginning)
-                           (evil-column evil-visual-end))))
-          (evil-visual-rotate 'upper-left)
-          (move-to-column column t)
-          (evil-insert count vcount skip-empty-lines)))
-       (t
-        (evil-visual-rotate 'upper-left)
-        (evil-insert count vcount skip-empty-lines)))
-    (setq evil-insert-count count
-          evil-insert-lines nil
-          evil-insert-vcount (and vcount
-                                  (> vcount 1)
-                                  (list (line-number-at-pos)
-                                        (current-column)
-                                        vcount))
-          evil-insert-skip-empty-lines skip-empty-lines)
-    (evil-insert-state 1)
-    (toggle-korean-input-method)
-    ))
 
 (add-to-list 'load-path "~/.emacs.d/lisp/evil-org-mode")
 (require 'evil-org)
@@ -288,12 +244,34 @@ lines.  This is the default behaviour for Visual-state insertion."
 (evil-mode 1)
 (setq evil-undo-system 'undo-fu)
 
+;; Natural IME
+(defvar prev-input-method current-input-method "Remember prev input method")
+;; set pre-input-method as local variable
+ (make-variable-buffer-local 'prev-input-method)
+
+  (defun lj-remember-ime () 
+    (interactive)
+    (setq prev-input-method current-input-method)
+    (set-input-method nil)
+    ;;debug
+    ;;(message prev-input-method)
+     )
+  (defun lj-ime-to-prev ()
+    (interactive)
+    ;;debug
+    ;;(message prev-input-method)
+    (set-input-method prev-input-method))
+
 (require 'undo-fu)
 (define-key evil-normal-state-map "u" 'undo-fu-only-undo)
 (define-key evil-normal-state-map "\C-r" 'undo-fu-only-redo)
 
 (when (require 'evil-collection nil t)
   (evil-collection-init))
+
+(add-hook 'evil-insert-state-exit-hook #'lj-remember-ime)
+(add-hook 'evil-insert-state-entry-hook #'lj-ime-to-prev)
+(add-hook 'evil-emacs-state-entry-hook #'lj-ime-to-prev)
 
 (setq default-directory "~/")
 
@@ -453,7 +431,7 @@ If not, open it in Emacs."
 (defun publish-hugo-blog (arg)
   "Commit and push main repo and submodule of static site."
   (interactive "sCommit message:")
-  (shell-command (format "publish '%s'" arg)))
+  (shell-command (format "/home/lj/.local/bin/publish '%s'" arg)))
 
 (global-set-key (kbd "C-x p") #'publish-hugo-blog)
 
@@ -493,4 +471,10 @@ in direction DIR instead."
           (t
            (select-window other-window)))))
 
-
+(setq elfeed-feeds
+      '(("https://security.archlinux.org/advisory/feed.atom" linux)
+        ("https://planet.emacslife.com/atom.xml" emacs)
+        ("https://cadadr.dreamwidth.org/data/atom" Göktuğ)
+        ("https://somethingpositive.net/feed/" webcomic)
+	("https://ljwrites.blog/index.xml" myblog)
+))	
